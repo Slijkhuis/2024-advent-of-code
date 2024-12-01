@@ -1,0 +1,31 @@
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/Slijkhuis/2024-advent-of-code/pkg/aoc"
+)
+
+func main() {
+	part1()
+	part2()
+}
+
+func part1() {
+	for line := range aoc.LinesFromFile(os.Args[1]) {
+		fmt.Println(line)
+	}
+}
+
+func part2() {
+	for line := range aoc.LinesFromFile(os.Args[1]) {
+		fmt.Println(line)
+	}
+}
+
+func fail(err error) {
+	if err != nil {
+		panic(err)
+	}
+}

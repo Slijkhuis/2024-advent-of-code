@@ -1,0 +1,26 @@
+version: "3"
+
+vars:
+  DAY:
+    sh: date +%d
+
+tasks:
+  init:
+    cmds:
+      - go run prep/main.go
+
+  test:
+    env:
+      DEBUG: "1"
+    cmds:
+      - go run {{.DAY}}/main.go {{.DAY}}/test.txt
+
+  test2:
+    env:
+      DEBUG: "1"
+    cmds:
+      - go run {{.DAY}}/main.go {{.DAY}}/test2.txt
+
+  run:
+    cmds:
+      - go run {{.DAY}}/main.go {{.DAY}}/input.txt
