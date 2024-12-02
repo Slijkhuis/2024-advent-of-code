@@ -62,3 +62,24 @@ func Sum[T ~float32 | ~float64 | ~int | ~int64](collection []T) T {
 	}
 	return sum
 }
+
+func Atoi(str string) int64 {
+	n, err := strconv.ParseInt(str, 10, 64)
+	fail(err)
+	return n
+}
+
+func Map[T, U any](collection []T, fn func(T) U) []U {
+	result := make([]U, len(collection))
+	for i := range collection {
+		result[i] = fn(collection[i])
+	}
+	return result
+}
+
+func Abs[T ~int64](n T) T {
+	if n < 0 {
+		return -n
+	}
+	return n
+}
