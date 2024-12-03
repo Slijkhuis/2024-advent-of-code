@@ -45,6 +45,12 @@ func LinesFromFile(path string) iter.Seq[string] {
 	}
 }
 
+func StringFromFile(path string) string {
+	b, err := os.ReadFile(path)
+	fail(err)
+	return string(b)
+}
+
 func Count[T comparable](collection []T, value T) (count int64) {
 	for i := range collection {
 		if collection[i] == value {
