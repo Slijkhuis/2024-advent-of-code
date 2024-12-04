@@ -8,6 +8,7 @@ tasks:
   init:
     cmds:
       - go run prep/main.go
+      - open https://adventofcode.com/2024/day/{{.DAY}}
 
   test:
     env:

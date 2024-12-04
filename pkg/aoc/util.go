@@ -21,9 +21,9 @@ func init() {
 }
 
 // Debug input if DEBUG=1 is set.
-func Debug(v any) {
+func Debug(v ...any) {
 	if debug {
-		fmt.Println(v)
+		fmt.Println(v...)
 	}
 }
 
@@ -88,4 +88,13 @@ func Abs[T ~int64](n T) T {
 		return -n
 	}
 	return n
+}
+
+func ReverseString(s string) string {
+	runes := []rune(s)
+	n := len(runes)
+	for i := 0; i < n/2; i++ {
+		runes[i], runes[n-1-i] = runes[n-1-i], runes[i]
+	}
+	return string(runes)
 }
