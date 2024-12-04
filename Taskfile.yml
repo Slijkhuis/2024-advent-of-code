@@ -3,6 +3,8 @@ version: "3"
 vars:
   DAY:
     sh: date +%d
+  TESTFILE: "test.txt"
+  INPUTFILE: "input.txt"
 
 tasks:
   init:
@@ -10,18 +12,22 @@ tasks:
       - go run prep/main.go
       - open https://adventofcode.com/2024/day/{{.DAY}}
 
-  test:
+  test1:
     env:
       DEBUG: "1"
     cmds:
-      - go run {{.DAY}}/main.go {{.DAY}}/test.txt
+      - go run {{.DAY}}/main.go 1 {{.DAY}}/{{.TESTFILE}}
 
   test2:
     env:
       DEBUG: "1"
     cmds:
-      - go run {{.DAY}}/main.go {{.DAY}}/test2.txt
+      - go run {{.DAY}}/main.go 2 {{.DAY}}/{{.TESTFILE}}
 
-  run:
+  run1:
     cmds:
-      - go run {{.DAY}}/main.go {{.DAY}}/input.txt
+      - go run {{.DAY}}/main.go 1 {{.DAY}}/{{.INPUTFILE}}
+
+  run2:
+    cmds:
+      - go run {{.DAY}}/main.go 2 {{.DAY}}/{{.INPUTFILE}}

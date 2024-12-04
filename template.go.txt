@@ -8,24 +8,30 @@ import (
 )
 
 func main() {
-	part1()
-	part2()
+	if len(os.Args) != 3 {
+		fmt.Println("Usage: go run main.go <part> <input-file>")
+		os.Exit(1)
+	}
+
+	switch os.Args[1] {
+	case "1":
+		part1()
+	case "2":
+		part2()
+	default:
+		fmt.Println("Invalid part")
+		os.Exit(1)
+	}
 }
 
 func part1() {
-	for line := range aoc.LinesFromFile(os.Args[1]) {
+	for line := range aoc.LinesFromFile(os.Args[2]) {
 		fmt.Println(line)
 	}
 }
 
 func part2() {
-	for line := range aoc.LinesFromFile(os.Args[1]) {
+	for line := range aoc.LinesFromFile(os.Args[2]) {
 		fmt.Println(line)
-	}
-}
-
-func fail(err error) {
-	if err != nil {
-		panic(err)
 	}
 }
