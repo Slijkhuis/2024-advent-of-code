@@ -48,6 +48,10 @@ func LinesFromFile(path string) iter.Seq[string] {
 func StringFromFile(path string) string {
 	b, err := os.ReadFile(path)
 	fail(err)
+	if b[len(b)-1] == '\n' {
+		b = b[:len(b)-1]
+	}
+
 	return string(b)
 }
 
