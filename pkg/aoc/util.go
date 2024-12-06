@@ -27,6 +27,12 @@ func Debug(v ...any) {
 	}
 }
 
+func Error(v ...any) {
+	v = append([]any{"ERROR:"}, v...)
+	fmt.Println(v...)
+	os.Exit(1)
+}
+
 func LinesFromFile(path string) iter.Seq[string] {
 	f, err := os.Open(path)
 	fail(err)

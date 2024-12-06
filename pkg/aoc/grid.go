@@ -7,17 +7,17 @@ import (
 )
 
 var (
-	Up        = Point{0, -1}
-	Down      = Point{0, 1}
-	Left      = Point{-1, 0}
-	Right     = Point{1, 0}
-	UpLeft    = Point{-1, -1}
-	UpRight   = Point{1, -1}
-	DownLeft  = Point{-1, 1}
-	DownRight = Point{1, 1}
+	Up        = Direction{0, -1}
+	Down      = Direction{0, 1}
+	Left      = Direction{-1, 0}
+	Right     = Direction{1, 0}
+	UpLeft    = Direction{-1, -1}
+	UpRight   = Direction{1, -1}
+	DownLeft  = Direction{-1, 1}
+	DownRight = Direction{1, 1}
 
-	Directions = []Point{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight}
-	Diagonals  = []Point{UpLeft, UpRight, DownLeft, DownRight}
+	Directions = []Direction{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight}
+	Diagonals  = []Direction{UpLeft, UpRight, DownLeft, DownRight}
 )
 
 type Point struct {
@@ -31,6 +31,19 @@ func (p Point) Add(other Point) Point {
 func (p Point) String() string {
 	return fmt.Sprintf("(%d,%d)", p.X, p.Y)
 }
+
+type Direction Point
+
+func (d Direction) TurnRight() Direction {
+	return Direction{-d.Y, d.X}
+}
+
+type PointWithDirection struct {
+	Point
+	Direction
+}
+
+const NullRune rune = '\000'
 
 type Cell struct {
 	Point
@@ -78,10 +91,28 @@ func (g *Grid) Iter() iter.Seq[Cell] {
 		}
 	}
 }
-func (g *Grid) AdjOrNull(p Point, direction Point) rune {
-	value, ok := g.Data[p.Add(direction)]
+
+func (g *Grid) Copy() *Grid {
+	newGrid := NewGrid(g.Width, g.Height)
+	for point, value := range g.Data {
+		newGrid.Data[point] = value
+	}
+	return newGrid
+}
+
+func (g *Grid) FindFirstCellWithValue(value rune) (Cell, bool) {
+	for cell := range g.Iter() {
+		if cell.Value == value {
+			return cell, true
+		}
+	}
+	return Cell{}, false
+}
+
+func (g *Grid) AdjOrNull(p Point, direction Direction) rune {
+	value, ok := g.Data[p.Add(Point(direction))]
 	if !ok {
-		return '\000'
+		return NullRune
 	}
 	return value
 }

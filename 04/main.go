@@ -21,7 +21,7 @@ func part1() {
 			for _, dir := range aoc.Directions {
 				aoc.Debug("Checking", cell.Point, "in direction", dir)
 
-				result, ok := grid.AdjString(cell.Point, dir, len(searchFor))
+				result, ok := grid.AdjString(cell.Point, aoc.Point(dir), len(searchFor))
 				if !ok {
 					aoc.Debug("Out of bounds")
 					continue
