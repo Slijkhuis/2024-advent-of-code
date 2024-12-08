@@ -144,3 +144,7 @@ func (g *Grid) String() string {
 	}
 	return sb.String()
 }
+
+func (g *Grid) InBounds(p Point) bool {
+	return p.X >= 0 && p.X < g.Width && p.Y >= 0 && p.Y < g.Height
+}

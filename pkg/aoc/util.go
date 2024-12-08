@@ -93,6 +93,15 @@ func Map[T, U any](collection []T, fn func(T) U) []U {
 	return result
 }
 
+func In[T comparable](collection []T, value T) bool {
+	for i := range collection {
+		if collection[i] == value {
+			return true
+		}
+	}
+	return false
+}
+
 func Abs[T ~int64](n T) T {
 	if n < 0 {
 		return -n
