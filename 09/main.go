@@ -169,7 +169,7 @@ func part2_attempt2() {
 		lastFile := files[0]
 		index := lastFile.size
 		for {
-			if index >= totalDiskSize || index >= f.index {
+			if index >= totalDiskSize || index > f.index {
 				break
 			}
 			nextFile := disk[index]
