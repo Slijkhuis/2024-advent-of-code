@@ -14,15 +14,15 @@ func fail(err error) {
 	}
 }
 
-var debug = false
+var DebugMode = false
 
 func init() {
-	debug = os.Getenv("DEBUG") == "1"
+	DebugMode = os.Getenv("DEBUG") == "1"
 }
 
 // Debug input if DEBUG=1 is set.
 func Debug(v ...any) {
-	if debug {
+	if DebugMode {
 		fmt.Println(v...)
 	}
 }
