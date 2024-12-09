@@ -3,6 +3,8 @@ version: "3"
 vars:
   DAY:
     sh: date +%d
+  DAY_NO_PAD:
+    sh: echo "{{.DAY}}" | sed 's/^0*//'
   TESTFILE: "test.txt"
   INPUTFILE: "input.txt"
 
@@ -10,7 +12,11 @@ tasks:
   init:
     cmds:
       - go run prep/main.go
-      - open https://adventofcode.com/2024/day/{{.DAY}}
+      - task openbrowser
+
+  openbrowser:
+    cmds:
+      - open https://adventofcode.com/2024/day/{{.DAY_NO_PAD}}
 
   test1:
     env:
