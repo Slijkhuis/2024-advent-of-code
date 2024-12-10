@@ -16,8 +16,9 @@ var (
 	DownLeft  = Direction{-1, 1}
 	DownRight = Direction{1, 1}
 
-	Directions = []Direction{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight}
-	Diagonals  = []Direction{UpLeft, UpRight, DownLeft, DownRight}
+	Directions  = []Direction{Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight}
+	Diagonals   = []Direction{UpLeft, UpRight, DownLeft, DownRight}
+	NoDiagonals = []Direction{Up, Down, Left, Right}
 )
 
 type Point struct {
