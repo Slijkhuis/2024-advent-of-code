@@ -118,9 +118,29 @@ func ReverseString(s string) string {
 	return string(runes)
 }
 
+func Unique[T comparable](collection []T) []T {
+	seen := make(map[T]bool)
+	result := make([]T, 0, len(collection))
+	for i := range collection {
+		if seen[collection[i]] {
+			continue
+		}
+		seen[collection[i]] = true
+		result = append(result, collection[i])
+	}
+	return result
+}
+
 func Min[T ~int64 | ~int](a, b T) T {
 	if b < a {
 		return b
 	}
 	return a
+}
+
+func Max[T ~int64 | ~int](a, b T) T {
+	if a >= b {
+		return a
+	}
+	return b
 }
