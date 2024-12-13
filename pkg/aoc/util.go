@@ -102,7 +102,7 @@ func In[T comparable](collection []T, value T) bool {
 	return false
 }
 
-func Abs[T ~int64](n T) T {
+func Abs[T ~int64 | ~int](n T) T {
 	if n < 0 {
 		return -n
 	}
@@ -116,4 +116,11 @@ func ReverseString(s string) string {
 		runes[i], runes[n-1-i] = runes[n-1-i], runes[i]
 	}
 	return string(runes)
+}
+
+func Min[T ~int64 | ~int](a, b T) T {
+	if b < a {
+		return b
+	}
+	return a
 }
