@@ -74,3 +74,9 @@ func Max[T ~int64 | ~int](a, b T) T {
 	}
 	return b
 }
+
+func Fail(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
