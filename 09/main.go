@@ -25,13 +25,13 @@ func main() {
 }
 
 func part1() {
-	diskMap := aoc.Map([]rune(aoc.StringFromFile(os.Args[2])), func(r rune) int64 {
+	diskMap := aoc.Map([]rune(aoc.StringFromFile(os.Args[2])), func(r rune) int {
 		return aoc.Atoi(string(r))
 	})
 	aoc.Debug(diskMap)
 
 	var seqs []*repeatingSequence
-	var id int64
+	var id int
 	for i, count := range diskMap {
 		if i%2 == 0 {
 			seqs = append(seqs, &repeatingSequence{id: id, count: count})
@@ -91,10 +91,10 @@ func part1() {
 		}
 	}
 
-	var checksum int64
-	var index int64
+	var checksum int
+	var index int
 	for _, seq := range seqs {
-		for j := int64(0); j < seq.count; j++ {
+		for j := 0; j < seq.count; j++ {
 			checksum += index * seq.id
 			index++
 		}
@@ -111,19 +111,19 @@ func part2() {
 func part2_attempt2() {
 	// This time I'm going to not track the empty space as sequences/blocks, but only keep track of the files.
 	type file struct {
-		index int64
-		id    int64
-		size  int64
+		index int
+		id    int
+		size  int
 	}
 
-	diskMap := aoc.Map([]rune(aoc.StringFromFile(os.Args[2])), func(r rune) int64 {
+	diskMap := aoc.Map([]rune(aoc.StringFromFile(os.Args[2])), func(r rune) int {
 		return aoc.Atoi(string(r))
 	})
 
-	files := map[int64]*file{} // files by id
-	disk := map[int64]*file{}  // files by index
-	var id int64
-	var index, totalDiskSize int64
+	files := map[int]*file{} // files by id
+	disk := map[int]*file{}  // files by index
+	var id int
+	var index, totalDiskSize int
 
 	diskAsString := func() string {
 		if !aoc.DebugMode {
@@ -131,7 +131,7 @@ func part2_attempt2() {
 		}
 
 		output := ""
-		for i := int64(0); i < totalDiskSize; i++ {
+		for i := 0; i < totalDiskSize; i++ {
 			if f, ok := disk[i]; ok {
 				output += fmt.Sprintf("%d", f.id)
 			} else {
@@ -197,9 +197,9 @@ func part2_attempt2() {
 		}
 	}
 
-	var checksum int64
+	var checksum int
 
-	for i := int64(0); i < totalDiskSize; i++ {
+	for i := 0; i < totalDiskSize; i++ {
 		if f, ok := disk[i]; ok {
 			checksum += i * f.id
 		}
@@ -210,13 +210,13 @@ func part2_attempt2() {
 }
 
 func part2_attempt1() {
-	diskMap := aoc.Map([]rune(aoc.StringFromFile(os.Args[2])), func(r rune) int64 {
+	diskMap := aoc.Map([]rune(aoc.StringFromFile(os.Args[2])), func(r rune) int {
 		return aoc.Atoi(string(r))
 	})
 	aoc.Debug(diskMap)
 
 	var seqs []*repeatingSequence
-	var id int64
+	var id int
 	for i, count := range diskMap {
 		if i%2 == 0 {
 			seqs = append(seqs, &repeatingSequence{id: id, count: count})
@@ -290,10 +290,10 @@ func part2_attempt1() {
 		continue
 	}
 
-	var checksum int64
-	var index int64
+	var checksum int
+	var index int
 	for _, seq := range seqs {
-		for j := int64(0); j < seq.count; j++ {
+		for j := 0; j < seq.count; j++ {
 			if seq.id >= 0 {
 				checksum += index * seq.id
 			}
@@ -306,8 +306,8 @@ func part2_attempt1() {
 }
 
 type repeatingSequence struct {
-	id    int64
-	count int64
+	id    int
+	count int
 }
 
 func findNextFreeIndex(seqs []*repeatingSequence, start int) int {
@@ -326,7 +326,7 @@ func findNextFreeIndex(seqs []*repeatingSequence, start int) int {
 func seqsToString(seqs []*repeatingSequence) string {
 	output := ""
 	for _, seq := range seqs {
-		for i := int64(0); i < seq.count; i++ {
+		for i := 0; i < seq.count; i++ {
 			if seq.id < 0 {
 				output += "."
 			} else {
@@ -337,7 +337,7 @@ func seqsToString(seqs []*repeatingSequence) string {
 	return output
 }
 
-func seqByID(seqs []*repeatingSequence, id int64) (int, *repeatingSequence) {
+func seqByID(seqs []*repeatingSequence, id int) (int, *repeatingSequence) {
 	for i, seq := range seqs {
 		if seq.id == id {
 			return i, seq
@@ -355,7 +355,7 @@ func mergeFreeAround(seqs []*repeatingSequence, free *repeatingSequence, index i
 	if len(seqs) > index+1 && seqs[index+1].id == -1 {
 		endMergeIndex++
 	}
-	mergedCount := int64(0)
+	mergedCount := 0
 	for i := startMergeIndex; i <= endMergeIndex; i++ {
 		if i == index {
 			mergedCount += free.count

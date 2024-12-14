@@ -31,16 +31,16 @@ func part1() {
 	ruleLines := strings.Split(sections[0], "\n")
 	orders := strings.Split(sections[1], "\n")
 
-	rulesByNumber := map[int64][][2]int64{}
+	rulesByNumber := map[int][][2]int{}
 	for _, rule := range ruleLines {
 		numbers := aoc.Map(strings.Split(rule, "|"), aoc.Atoi)
-		rulesByNumber[numbers[0]] = append(rulesByNumber[numbers[0]], [2]int64{numbers[0], numbers[1]})
-		rulesByNumber[numbers[1]] = append(rulesByNumber[numbers[1]], [2]int64{numbers[0], numbers[1]})
+		rulesByNumber[numbers[0]] = append(rulesByNumber[numbers[0]], [2]int{numbers[0], numbers[1]})
+		rulesByNumber[numbers[1]] = append(rulesByNumber[numbers[1]], [2]int{numbers[0], numbers[1]})
 	}
 
 	aoc.Debug(ruleLines)
 
-	var result int64
+	var result int
 	for _, order := range orders {
 		numbers := aoc.Map(strings.Split(order, ","), aoc.Atoi)
 		aoc.Debug(numbers)
@@ -55,8 +55,8 @@ func part1() {
 	fmt.Println(result)
 }
 
-func findInvalidNumberIndex(numbers []int64, rulesByNumber map[int64][][2]int64) int {
-	processed := map[int64]bool{}
+func findInvalidNumberIndex(numbers []int, rulesByNumber map[int][][2]int) int {
+	processed := map[int]bool{}
 	for i, number := range numbers {
 		rules, ok := rulesByNumber[number]
 		if !ok {
@@ -91,16 +91,16 @@ func part2() {
 	ruleLines := strings.Split(sections[0], "\n")
 	orders := strings.Split(sections[1], "\n")
 
-	rulesByNumber := map[int64][][2]int64{}
+	rulesByNumber := map[int][][2]int{}
 	for _, rule := range ruleLines {
 		numbers := aoc.Map(strings.Split(rule, "|"), aoc.Atoi)
-		rulesByNumber[numbers[0]] = append(rulesByNumber[numbers[0]], [2]int64{numbers[0], numbers[1]})
-		rulesByNumber[numbers[1]] = append(rulesByNumber[numbers[1]], [2]int64{numbers[0], numbers[1]})
+		rulesByNumber[numbers[0]] = append(rulesByNumber[numbers[0]], [2]int{numbers[0], numbers[1]})
+		rulesByNumber[numbers[1]] = append(rulesByNumber[numbers[1]], [2]int{numbers[0], numbers[1]})
 	}
 
 	aoc.Debug(ruleLines)
 
-	var result int64
+	var result int
 	for _, order := range orders {
 		numbers := aoc.Map(strings.Split(order, ","), aoc.Atoi)
 		aoc.Debug(numbers)

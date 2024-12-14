@@ -30,7 +30,7 @@ func part1() {
 	aoc.Debug(stones)
 
 	for range 25 {
-		newStones := make([]int64, 0, len(stones))
+		newStones := make([]int, 0, len(stones))
 		for _, s := range stones {
 			if s == 0 {
 				newStones = append(newStones, 1)
@@ -56,7 +56,7 @@ func part2() {
 	stones := aoc.Map(strings.Split(aoc.StringFromFile(os.Args[2]), " "), aoc.Atoi)
 	aoc.Debug(stones)
 
-	var totalNumberOfStones int64
+	var totalNumberOfStones int
 	for _, s := range stones {
 		totalNumberOfStones += amountOfStonesAfterBlinksForSingleStone(s, 75)
 	}
@@ -65,18 +65,18 @@ func part2() {
 }
 
 type cacheKeyDay11 struct {
-	number int64
+	number int
 	blinks int
 }
 
-var cacheDay11 = make(map[cacheKeyDay11]int64)
+var cacheDay11 = make(map[cacheKeyDay11]int)
 
-func cacheAmountOfStones(key cacheKeyDay11, value int64) int64 {
+func cacheAmountOfStones(key cacheKeyDay11, value int) int {
 	cacheDay11[key] = value
 	return value
 }
 
-func amountOfStonesAfterBlinksForSingleStone(numberOnStone int64, blinks int) int64 {
+func amountOfStonesAfterBlinksForSingleStone(numberOnStone int, blinks int) int {
 	key := cacheKeyDay11{numberOnStone, blinks}
 	if v, ok := cacheDay11[key]; ok {
 		return v

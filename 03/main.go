@@ -17,7 +17,7 @@ func main() {
 func part1() {
 	data := aoc.StringFromFile(os.Args[1])
 	results := regexp.MustCompile(`mul\(\d{1,3},\d{1,3}\)`).FindAllString(data, -1)
-	answer := int64(0)
+	answer := 0
 	for _, result := range results {
 		aoc.Debug(result)
 		numbers := aoc.Map(strings.Split(result[4:len(result)-1], ","), aoc.Atoi)
@@ -30,7 +30,7 @@ func part1() {
 func part2() {
 	data := aoc.StringFromFile(os.Args[1])
 	results := regexp.MustCompile(`(mul\(\d{1,3},\d{1,3}\))|(do\(\))|(don't\(\))`).FindAllString(data, -1)
-	answer := int64(0)
+	answer := 0
 	do := true
 	for _, result := range results {
 		if result == "do()" {

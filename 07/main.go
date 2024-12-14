@@ -26,12 +26,12 @@ func main() {
 }
 
 func part1() {
-	sum := int64(0)
+	sum := 0
 	for line := range aoc.LinesFromFile(os.Args[2]) {
 		data := strings.Split(line, ": ")
 		testResult := aoc.Atoi(data[0])
 		numbers := aoc.Map(strings.Split(data[1], " "), aoc.Atoi)
-		startingNode := &aoc.TreeNode[int64]{Value: numbers[0]}
+		startingNode := &aoc.TreeNode[int]{Value: numbers[0]}
 
 		result := getNumberOfPossibilities(startingNode, numbers[1:], testResult)
 		if result > 0 {
@@ -43,7 +43,7 @@ func part1() {
 }
 
 func getNumberOfPossibilities(
-	node *aoc.TreeNode[int64], numbers []int64, testResult int64,
+	node *aoc.TreeNode[int], numbers []int, testResult int,
 ) int {
 	if len(numbers) == 0 {
 		if node.Value == testResult {
@@ -53,20 +53,20 @@ func getNumberOfPossibilities(
 		}
 	}
 
-	node1 := &aoc.TreeNode[int64]{Value: node.Value * numbers[0]}
-	node2 := &aoc.TreeNode[int64]{Value: node.Value + numbers[0]}
+	node1 := &aoc.TreeNode[int]{Value: node.Value * numbers[0]}
+	node2 := &aoc.TreeNode[int]{Value: node.Value + numbers[0]}
 
 	return getNumberOfPossibilities(node1, numbers[1:], testResult) +
 		getNumberOfPossibilities(node2, numbers[1:], testResult)
 }
 
 func part2() {
-	sum := int64(0)
+	sum := 0
 	for line := range aoc.LinesFromFile(os.Args[2]) {
 		data := strings.Split(line, ": ")
 		testResult := aoc.Atoi(data[0])
 		numbers := aoc.Map(strings.Split(data[1], " "), aoc.Atoi)
-		startingNode := &aoc.TreeNode[int64]{Value: numbers[0]}
+		startingNode := &aoc.TreeNode[int]{Value: numbers[0]}
 
 		result := getNumberOfPossibilities2(startingNode, numbers[1:], testResult)
 		if result > 0 {
@@ -77,7 +77,7 @@ func part2() {
 	fmt.Println(sum)
 }
 func getNumberOfPossibilities2(
-	node *aoc.TreeNode[int64], numbers []int64, testResult int64,
+	node *aoc.TreeNode[int], numbers []int, testResult int,
 ) int {
 	if len(numbers) == 0 {
 		if node.Value == testResult {
@@ -87,9 +87,9 @@ func getNumberOfPossibilities2(
 		}
 	}
 
-	node1 := &aoc.TreeNode[int64]{Value: node.Value * numbers[0]}
-	node2 := &aoc.TreeNode[int64]{Value: node.Value + numbers[0]}
-	node3 := &aoc.TreeNode[int64]{Value: aoc.Atoi(fmt.Sprintf("%d%d", node.Value, numbers[0]))}
+	node1 := &aoc.TreeNode[int]{Value: node.Value * numbers[0]}
+	node2 := &aoc.TreeNode[int]{Value: node.Value + numbers[0]}
+	node3 := &aoc.TreeNode[int]{Value: aoc.Atoi(fmt.Sprintf("%d%d", node.Value, numbers[0]))}
 
 	return getNumberOfPossibilities2(node1, numbers[1:], testResult) +
 		getNumberOfPossibilities2(node2, numbers[1:], testResult) +

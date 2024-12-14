@@ -16,8 +16,8 @@ func main() {
 }
 
 func aoc01b() {
-	list1 := make([]int64, 0)
-	list2 := make([]int64, 0)
+	list1 := make([]int, 0)
+	list2 := make([]int, 0)
 
 	for line := range aoc.LinesFromFile(os.Args[1]) {
 		cols := strings.Fields(line)
@@ -26,14 +26,14 @@ func aoc01b() {
 		}
 		i1, err := strconv.ParseInt(cols[0], 10, 64)
 		fail(err)
-		list1 = append(list1, i1)
+		list1 = append(list1, int(i1))
 
 		i2, err := strconv.ParseInt(cols[1], 10, 64)
 		fail(err)
-		list2 = append(list2, i2)
+		list2 = append(list2, int(i2))
 	}
 
-	var result int64
+	var result int
 	for i := 0; i < len(list1); i++ {
 		number := list1[i]
 		result += number * aoc.Count(list2, number)

@@ -59,7 +59,7 @@ func part2() {
 	fmt.Println(safeReports)
 }
 
-func checkSafety(numbers []int64) bool {
+func checkSafety(numbers []int) bool {
 	lastNumber := numbers[0]
 	increasing := false
 	safe := true
@@ -88,7 +88,7 @@ func checkSafety(numbers []int64) bool {
 
 	return safe
 }
-func getSkipIndex(numbers []int64) int {
+func getSkipIndex(numbers []int) int {
 	lastNumber := numbers[0]
 	increasing := false
 	for i, number := range numbers {
