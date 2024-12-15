@@ -25,8 +25,8 @@ type Point struct {
 	X, Y int
 }
 
-func (p Point) Add(other Point) Point {
-	return Point{p.X + other.X, p.Y + other.Y}
+func (p Point) Move(inDirection Direction) Point {
+	return Point{p.X + inDirection.X, p.Y + inDirection.Y}
 }
 
 func (p Point) String() string {
@@ -115,14 +115,14 @@ func (g *Grid) FindFirstCellWithValue(value rune) (Cell, bool) {
 }
 
 func (g *Grid) AdjOrNull(p Point, direction Direction) rune {
-	value, ok := g.Data[p.Add(Point(direction))]
+	value, ok := g.Data[p.Move(direction)]
 	if !ok {
 		return NullRune
 	}
 	return value
 }
 
-func (g *Grid) AdjString(p Point, direction Point, length int) (string, bool) {
+func (g *Grid) AdjString(p Point, direction Direction, length int) (string, bool) {
 	var result string
 
 	for i := 0; i < length; i++ {
@@ -133,7 +133,7 @@ func (g *Grid) AdjString(p Point, direction Point, length int) (string, bool) {
 
 		result += string(cell)
 
-		p = p.Add(direction)
+		p = p.Move(direction)
 	}
 
 	return result, true

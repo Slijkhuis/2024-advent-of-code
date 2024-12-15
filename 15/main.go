@@ -56,7 +56,7 @@ func part1() {
 	grid.Data[robotPos] = '.'
 
 	for _, move := range moves {
-		pos := robotPos.Add(aoc.Point(move))
+		pos := robotPos.Move(move)
 		val := grid.Data[pos]
 
 		if val == '#' {
@@ -79,7 +79,7 @@ func part1() {
 		lastBoxPos := pos
 		numberOfBoxes := 1
 		for {
-			tmpPos := lastBoxPos.Add(aoc.Point(move))
+			tmpPos := lastBoxPos.Move(move)
 			if grid.Data[tmpPos] == 'O' {
 				numberOfBoxes++
 				lastBoxPos = tmpPos
@@ -88,7 +88,7 @@ func part1() {
 			}
 		}
 
-		nextToLastBoxPos := lastBoxPos.Add(aoc.Point(move))
+		nextToLastBoxPos := lastBoxPos.Move(move)
 		if grid.Data[nextToLastBoxPos] == '#' {
 			continue
 		}

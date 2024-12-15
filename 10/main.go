@@ -118,7 +118,7 @@ func part2() {
 
 func addAdjecentNodes(g *aoc.Graph[aoc.Point, int], grid *aoc.Grid, n *aoc.Node[aoc.Point, int]) {
 	for _, dir := range aoc.NoDiagonals {
-		p := n.Key.Add(aoc.Point(dir))
+		p := n.Key.Move(dir)
 		r, ok := grid.Data[p]
 		if !ok {
 			continue

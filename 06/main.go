@@ -37,7 +37,7 @@ func part1() {
 		p: true,
 	}
 	for {
-		newPoint := p.Add(aoc.Point(dir))
+		newPoint := p.Move(dir)
 		r, ok := g.Data[newPoint]
 		if !ok {
 			break
@@ -73,7 +73,7 @@ func part2() {
 		p: true,
 	}
 	for {
-		newPoint := p.Add(aoc.Point(dir))
+		newPoint := p.Move(dir)
 		r, ok := g.Data[newPoint]
 		if !ok {
 			break
@@ -121,7 +121,7 @@ func doesItLoop(g *aoc.Grid, p aoc.Point, dir aoc.Direction) bool {
 			}
 		}
 
-		newPoint := p.Add(aoc.Point(dir))
+		newPoint := p.Move(dir)
 		r, ok := g.Data[newPoint]
 		if !ok {
 			break

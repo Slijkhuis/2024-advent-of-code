@@ -43,7 +43,7 @@ func part1() {
 			partOfRegion[p] = true
 
 			for _, dir := range aoc.NoDiagonals {
-				newPoint := p.Add(aoc.Point(dir))
+				newPoint := p.Move(dir)
 				r, ok := g.Data[newPoint]
 				if !ok {
 					continue
@@ -109,7 +109,7 @@ func part2() {
 			partOfRegion[p] = true
 
 			for _, dir := range aoc.NoDiagonals {
-				newPoint := p.Add(aoc.Point(dir))
+				newPoint := p.Move(dir)
 				r, ok := g.Data[newPoint]
 				if !ok {
 					continue
