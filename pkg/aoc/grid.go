@@ -66,6 +66,10 @@ func NewGrid(width, height int) *Grid {
 
 func BuildGridFromFile(filename string) *Grid {
 	data := StringFromFile(filename)
+	return BuildGridFromString(data)
+}
+
+func BuildGridFromString(data string) *Grid {
 	lines := strings.Split(data, "\n")
 	if lines[len(lines)-1] == "" {
 		lines = lines[:len(lines)-1]
