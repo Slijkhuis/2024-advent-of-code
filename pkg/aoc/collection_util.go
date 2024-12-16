@@ -39,3 +39,19 @@ func Unique[T comparable](collection []T) []T {
 	}
 	return result
 }
+
+func Except[T comparable](collection []T, values ...T) []T {
+	seen := make(map[T]bool)
+	for i := range values {
+		seen[values[i]] = true
+	}
+
+	result := make([]T, 0, len(collection))
+	for i := range collection {
+		if seen[collection[i]] {
+			continue
+		}
+		result = append(result, collection[i])
+	}
+	return result
+}

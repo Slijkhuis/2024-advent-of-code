@@ -39,6 +39,14 @@ func (d Direction) TurnRight() Direction {
 	return Direction{-d.Y, d.X}
 }
 
+func (d Direction) TurnLeft() Direction {
+	return Direction{d.Y, -d.X}
+}
+
+func (d Direction) Opposite() Direction {
+	return Direction{-d.X, -d.Y}
+}
+
 type PointWithDirection struct {
 	Point
 	Direction
