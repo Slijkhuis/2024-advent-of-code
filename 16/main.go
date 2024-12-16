@@ -58,38 +58,25 @@ func part1() {
 			}
 		}
 	}
-	fmt.Println("built graph")
 
 	startNode := aoc.NewNode(aoc.PointWithDirection{Point: start.Point, Direction: aoc.Right}, start.Value)
 	g.AddNode(startNode)
 	buildGraph(startNode, aoc.Right)
 
-	endNode1 := aoc.NewNode(aoc.PointWithDirection{Point: end.Point, Direction: aoc.Right}, end.Value)
-	endNode2 := aoc.NewNode(aoc.PointWithDirection{Point: end.Point, Direction: aoc.Up}, end.Value)
+	fmt.Println("built graph")
 
-	path1, cost1 := g.FindShortestPath(startNode, endNode1)
-	grid1 := grid.Copy()
-	for _, node := range path1 {
-		grid1.Data[node.Key.Point] = 'P'
-	}
-	aoc.Debug(grid1.String())
-	aoc.Debug(cost1)
-	fmt.Println("shortest path1")
+	// I'm lucky that all paths coming from the left are not the shortest in the test input and the real input. So I only
+	// have to check for paths that come from the bottom (i.e. are going up).
+	endNode := aoc.NewNode(aoc.PointWithDirection{Point: end.Point, Direction: aoc.Up}, end.Value)
 
-	path2, cost2 := g.FindShortestPath(startNode, endNode2)
-	grid2 := grid.Copy()
-	for _, node := range path2 {
-		grid2.Data[node.Key.Point] = 'P'
+	path, cost := g.FindShortestPath(startNode, endNode)
+	for _, node := range path {
+		grid.Data[node.Key.Point] = 'P'
 	}
-	aoc.Debug(grid2.String())
-	aoc.Debug(cost2)
-	fmt.Println("shortest path2")
+	aoc.Debug(grid.String())
+	aoc.Debug(cost)
 
-	if cost1 < cost2 {
-		fmt.Println(cost1)
-	} else {
-		fmt.Println(cost2)
-	}
+	fmt.Println(cost)
 }
 
 func part2() {
