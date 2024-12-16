@@ -187,3 +187,59 @@ func (g *Graph[K, T]) FindShortestPath(from, to *Node[K, T]) ([]*Node[K, T], int
 
 	return nil, 0
 }
+
+func (g *Graph[K, T]) FindAllShortestPaths(from, to *Node[K, T]) ([][]*Node[K, T], int) {
+	dist := make(map[K]int)
+	prev := make(map[K][]*Node[K, T])
+	pq := make(PriorityQueue[K, T], 0)
+
+	for key := range g.Nodes {
+		dist[key] = math.MaxInt
+		prev[key] = []*Node[K, T]{}
+	}
+
+	dist[from.Key] = 0
+	heap.Push(&pq, &Item[K, T]{node: from, priority: 0})
+
+	for pq.Len() > 0 {
+		item := heap.Pop(&pq).(*Item[K, T])
+		u := item.node
+
+		if item.priority > dist[u.Key] {
+			continue
+		}
+
+		for edge := range g.Edges {
+			if edge.From.Key == u.Key {
+				v := g.Nodes[edge.To.Key]
+				alt := dist[u.Key] + edge.Weight
+				if alt < dist[v.Key] {
+					dist[v.Key] = alt
+					prev[v.Key] = []*Node[K, T]{u}
+					heap.Push(&pq, &Item[K, T]{node: v, priority: alt})
+				} else if alt == dist[v.Key] {
+					prev[v.Key] = append(prev[v.Key], u)
+				}
+			}
+		}
+	}
+
+	var paths [][]*Node[K, T]
+
+	var backtrack func(*Node[K, T], []*Node[K, T])
+	backtrack = func(n *Node[K, T], path []*Node[K, T]) {
+		if n == from {
+			paths = append(paths, Reverse(path))
+			return
+		}
+
+		for _, prevNode := range prev[n.Key] {
+			pathClone := append(path[:0:0], path...)
+			backtrack(prevNode, append(pathClone, prevNode))
+		}
+	}
+
+	backtrack(to, []*Node[K, T]{to})
+
+	return paths, dist[to.Key]
+}

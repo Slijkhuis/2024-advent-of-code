@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
 func fail(err error) {
@@ -23,6 +24,10 @@ func Debug(v ...any) {
 	if DebugMode {
 		fmt.Println(v...)
 	}
+}
+
+func Println(t time.Time, v ...any) {
+	fmt.Println(append([]any{time.Since(t).Round(time.Millisecond)}, v...)...)
 }
 
 func Error(v ...any) {

@@ -55,3 +55,11 @@ func Except[T comparable](collection []T, values ...T) []T {
 	}
 	return result
 }
+
+func Reverse[T any](collection []T) []T {
+	n := len(collection)
+	for i := 0; i < n/2; i++ {
+		collection[i], collection[n-1-i] = collection[n-1-i], collection[i]
+	}
+	return collection
+}
