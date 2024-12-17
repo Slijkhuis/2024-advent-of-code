@@ -26,6 +26,15 @@ func Debug(v ...any) {
 	}
 }
 
+func Debugf(format string, v ...any) {
+	if DebugMode {
+		if len(format) > 0 && format[len(format)-1] != '\n' {
+			format += "\n"
+		}
+		fmt.Printf(format, v...)
+	}
+}
+
 func Println(t time.Time, v ...any) {
 	fmt.Println(append([]any{time.Since(t).Round(time.Millisecond)}, v...)...)
 }
