@@ -71,8 +71,6 @@ func executeProgram(program []int, a, b, c int) ([]int, int, int, int) {
 		instruction := program[i]
 		operand := program[i+1]
 
-		aoc.Debugf("Instruction: %d, Operand: %d\n", instruction, operand)
-
 		switch instruction {
 		case 0: // adv
 			a = dv(operand)
@@ -102,7 +100,88 @@ func executeProgram(program []int, a, b, c int) ([]int, int, int, int) {
 }
 
 func part2() {
-	for line := range aoc.LinesFromFile(os.Args[2]) {
-		fmt.Println(line)
+	data := aoc.StringFromFile(os.Args[2])
+	parts := strings.Split(data, "\n\n")
+	program := aoc.IntsFromString(parts[1])
+	result, a, b, c := executeProgramCustom(59590048, 0, 0)
+	fmt.Println(result, a, b, c)
+	result, a, b, c = executeProgram(program, 59590048, 0, 0)
+	fmt.Println(result, a, b, c)
+
+	type Attempt struct {
+		a_guess  int
+		position int
 	}
+
+	attempts := []Attempt{
+		{
+			a_guess:  0,
+			position: 0,
+		},
+	}
+
+	for len(attempts) > 0 {
+		attempt := attempts[0]
+		attempts = attempts[1:]
+
+		if attempt.position > len(program) {
+			fmt.Println("FINAL ANSWER:")
+			fmt.Println(attempt.a_guess)
+			return
+		}
+
+		for i := 0; i < 8; i++ {
+			guess := (attempt.a_guess << 3) | i
+			fmt.Printf("%08b\n", guess)
+
+			result, a, b, c = executeProgramCustom(guess, 0, 0)
+			fmt.Println(result, a, b, c)
+
+			shouldMatch := program[len(program)-attempt.position:]
+
+			matches := len(shouldMatch) == len(result)
+			if matches {
+				for i := range shouldMatch {
+					if shouldMatch[i] != result[i] {
+						matches = false
+						break
+					}
+				}
+			}
+
+			if matches {
+				fmt.Println("MATCH", attempt.position)
+				attempts = append(attempts, Attempt{
+					a_guess:  guess,
+					position: attempt.position + 1,
+				})
+			}
+		}
+	}
+
+	fmt.Println("NO ANSWER :(.")
+}
+
+// executeProgramCustom implements my input as a Go function to make the algorithm more readable.
+// I manually went through the instructions and translated them to Go code.
+func executeProgramCustom(a, b, c int) ([]int, int, int, int) {
+	var result []int
+	for a != 0 {
+		// 2,4
+		b = a % 8
+		// 1,5
+		b = b ^ 5
+		// 7,5
+		c = a / (1 << b)
+		// 0,3
+		a = a / 8
+		// 1,6
+		b = b ^ 6
+		// 4,3
+		b = b ^ c
+		// 5,5
+		result = append(result, b%8)
+	} // 3,0
+
+	return result, a, b, c
 }
