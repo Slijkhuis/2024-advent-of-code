@@ -72,6 +72,21 @@ func NewGrid(width, height int) *Grid {
 	}
 }
 
+func NewGridWithDefaultValue(width, height int, val rune) *Grid {
+	data := make(map[Point]rune)
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			data[Point{x, y}] = val
+		}
+	}
+
+	return &Grid{
+		Width:  width,
+		Height: height,
+		Data:   data,
+	}
+}
+
 func BuildGridFromFile(filename string) *Grid {
 	data := StringFromFile(filename)
 	return BuildGridFromString(data)
