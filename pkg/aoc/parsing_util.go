@@ -5,6 +5,7 @@ import (
 	"iter"
 	"os"
 	"regexp"
+	"strings"
 )
 
 func LinesFromFile(path string) iter.Seq[string] {
@@ -33,6 +34,10 @@ func StringFromFile(path string) string {
 	}
 
 	return string(b)
+}
+
+func SectionsFromFileAsString(path string) []string {
+	return strings.Split(StringFromFile(path), "\n\n")
 }
 
 var intsFromStringRegex = regexp.MustCompile(`-?\d+`)
