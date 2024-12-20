@@ -136,7 +136,51 @@ func buildPath(grid *aoc.Grid) (aoc.Point, aoc.Point, []aoc.Point) {
 }
 
 func part2() {
-	for line := range aoc.LinesFromFile(os.Args[2]) {
-		fmt.Println(line)
+	t := time.Now()
+	grid := aoc.BuildGridFromFile(os.Args[2])
+	start, end, path := buildPath(grid)
+	aoc.Debug(start, end)
+
+	var cheatSavings []int
+	for i1, p1 := range path {
+		for i2, p2 := range path {
+			if i1 > i2 {
+				continue
+			}
+			if p1 == p2 {
+				continue
+			}
+
+			d := p1.DistanceToUsingNoDiagonals(p2)
+			if d <= 1 || d > 20 {
+				continue
+			}
+
+			nonCheatingDistanceToEnd := len(path) - i1
+			cheatingDistanceToEnd := len(path) - i2
+
+			savings := nonCheatingDistanceToEnd - cheatingDistanceToEnd - d
+
+			cheatSavings = append(cheatSavings, savings)
+		}
 	}
+
+	var cheatsThatSaveAtLeast100ps int
+	cheatsPerSavings := map[int]int{}
+	for _, saving := range cheatSavings {
+		cheatsPerSavings[saving]++
+		if saving >= 100 {
+			cheatsThatSaveAtLeast100ps++
+		}
+	}
+
+	sort.IntSlice(cheatSavings).Sort()
+	for _, savings := range aoc.Unique(cheatSavings) {
+		if savings < 50 {
+			continue
+		}
+		aoc.Debug("There are", cheatsPerSavings[savings], "cheats that save", savings, "picoseconds.")
+	}
+
+	aoc.Println(t, "cheats that save at least 100 picoseconds:", cheatsThatSaveAtLeast100ps)
 }

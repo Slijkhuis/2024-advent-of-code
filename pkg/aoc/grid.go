@@ -33,6 +33,10 @@ func (p Point) String() string {
 	return fmt.Sprintf("(%d,%d)", p.X, p.Y)
 }
 
+func (p Point) DistanceToUsingNoDiagonals(p2 Point) int {
+	return Abs(p.X-p2.X) + Abs(p.Y-p2.Y)
+}
+
 type Direction Point
 
 func (d Direction) TurnRight() Direction {
