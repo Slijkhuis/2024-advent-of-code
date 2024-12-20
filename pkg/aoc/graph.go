@@ -25,6 +25,11 @@ type Edge[K, T comparable] struct {
 	Weight int
 }
 
+type Path[K, T comparable] struct {
+	Nodes  []*Node[K, T]
+	Weight int
+}
+
 func NewGraph[K, T comparable]() *Graph[K, T] {
 	return &Graph[K, T]{
 		Nodes: map[K]*Node[K, T]{},
@@ -120,15 +125,15 @@ func (g *Graph[K, T]) dfs(current, target *Node[K, T], visited map[K]bool) bool 
 }
 
 // FindAllPaths (BFS)
-func (g *Graph[K, T]) FindAllPaths(from, to *Node[K, T]) [][]*Node[K, T] {
-	var paths [][]*Node[K, T]
-	queue := [][]*Node[K, T]{{from}}
+func (g *Graph[K, T]) FindAllPaths(from, to *Node[K, T]) []Path[K, T] {
+	var paths []Path[K, T]
+	queue := []Path[K, T]{{Nodes: []*Node[K, T]{from}, Weight: 0}}
 
 	for len(queue) > 0 {
 		path := queue[0]
 		queue = queue[1:]
 
-		last := path[len(path)-1]
+		last := path.Nodes[len(path.Nodes)-1]
 		if last.Key == to.Key {
 			paths = append(paths, path)
 			continue
@@ -136,8 +141,11 @@ func (g *Graph[K, T]) FindAllPaths(from, to *Node[K, T]) [][]*Node[K, T] {
 
 		for edge := range g.Edges {
 			if edge.From.Key == last.Key {
-				newPath := append([]*Node[K, T]{}, path...)
-				newPath = append(newPath, g.Nodes[edge.To.Key])
+				newPath := Path[K, T]{
+					Nodes:  append([]*Node[K, T]{}, path.Nodes...),
+					Weight: path.Weight + edge.Weight,
+				}
+				newPath.Nodes = append(newPath.Nodes, g.Nodes[edge.To.Key])
 				queue = append(queue, newPath)
 			}
 		}
