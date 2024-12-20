@@ -29,44 +29,7 @@ func main() {
 func part1() {
 	t := time.Now()
 	grid := aoc.BuildGridFromFile(os.Args[2])
-	start, ok := grid.FindFirstCellWithValue('S')
-	if !ok {
-		aoc.Error("No start found")
-	}
-	end, ok := grid.FindFirstCellWithValue('E')
-	if !ok {
-		aoc.Error("No end found")
-	}
-
-	visited := map[aoc.Point]bool{start.Point: true}
-	current := start.Point
-	path := []aoc.Point{start.Point}
-	for {
-		for _, dir := range aoc.NoDiagonals {
-			next := current.Move(dir)
-
-			_, ok := visited[next]
-			if ok {
-				continue
-			}
-			visited[next] = true
-
-			v, ok := grid.Data[next]
-			if !ok {
-				continue
-			}
-			if v == '#' {
-				continue
-			}
-			path = append(path, next)
-			current = next
-		}
-
-		if current == end.Point {
-			break
-		}
-	}
-	aoc.Debug(len(path), path)
+	_, _, path := buildPath(grid)
 
 	pointIndices := map[aoc.Point]int{}
 	for i, p := range path {
@@ -128,6 +91,48 @@ func part1() {
 	}
 
 	aoc.Println(t, "cheats that save at least 100 picoseconds:", cheatsThatSaveAtLeast100ps)
+}
+
+func buildPath(grid *aoc.Grid) (aoc.Point, aoc.Point, []aoc.Point) {
+	start, ok := grid.FindFirstCellWithValue('S')
+	if !ok {
+		aoc.Error("No start found")
+	}
+	end, ok := grid.FindFirstCellWithValue('E')
+	if !ok {
+		aoc.Error("No end found")
+	}
+	visited := map[aoc.Point]bool{start.Point: true}
+	current := start.Point
+	path := []aoc.Point{start.Point}
+	for {
+		for _, dir := range aoc.NoDiagonals {
+			next := current.Move(dir)
+
+			_, ok := visited[next]
+			if ok {
+				continue
+			}
+			visited[next] = true
+
+			v, ok := grid.Data[next]
+			if !ok {
+				continue
+			}
+			if v == '#' {
+				continue
+			}
+			path = append(path, next)
+			current = next
+		}
+
+		if current == end.Point {
+			break
+		}
+	}
+	aoc.Debug(len(path), path)
+
+	return start.Point, end.Point, path
 }
 
 func part2() {
