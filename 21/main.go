@@ -187,12 +187,112 @@ func buttonSequenceForInputAndPad(input []rune, pad *aoc.Grid) []rune {
 }
 
 func part2() {
+	t := time.Now()
+
+	var codes []Code
 	for line := range aoc.LinesFromFile(os.Args[2]) {
-		fmt.Println(line)
+		numericPart := aoc.IntsFromString(line)[0]
+		buttons := []rune(line)
+		codes = append(codes, Code{Numeric: numericPart, Buttons: buttons})
 	}
+	aoc.Debug(codes)
+
+	numberPad := aoc.NewGrid(3, 4)
+	numberPad.Data[aoc.Point{X: 0, Y: 0}] = '7'
+	numberPad.Data[aoc.Point{X: 1, Y: 0}] = '8'
+	numberPad.Data[aoc.Point{X: 2, Y: 0}] = '9'
+	numberPad.Data[aoc.Point{X: 0, Y: 1}] = '4'
+	numberPad.Data[aoc.Point{X: 1, Y: 1}] = '5'
+	numberPad.Data[aoc.Point{X: 2, Y: 1}] = '6'
+	numberPad.Data[aoc.Point{X: 0, Y: 2}] = '1'
+	numberPad.Data[aoc.Point{X: 1, Y: 2}] = '2'
+	numberPad.Data[aoc.Point{X: 2, Y: 2}] = '3'
+	numberPad.Data[aoc.Point{X: 1, Y: 3}] = '0'
+	numberPad.Data[aoc.Point{X: 2, Y: 3}] = 'A'
+
+	arrowPad := aoc.NewGrid(3, 2)
+	arrowPad.Data[aoc.Point{X: 1, Y: 0}] = '^'
+	arrowPad.Data[aoc.Point{X: 2, Y: 0}] = 'A'
+	arrowPad.Data[aoc.Point{X: 0, Y: 1}] = '<'
+	arrowPad.Data[aoc.Point{X: 1, Y: 1}] = 'v'
+	arrowPad.Data[aoc.Point{X: 2, Y: 1}] = '>'
+
+	aoc.Println(t, "parsed input")
+
+	// Naively repeating the approach for part 1 didn't work (too slow).
+	// So I went with an approach where I cache intermediate results. The basic idea was that every time you get back to
+	// the A you have a section/step in the sequence that would produce the same result upstream. This is true for every
+	// "layer"/robot in the "chain".
+	answer := 0
+	for _, code := range codes {
+		aoc.Debug(aoc.JoinRunes(code.Buttons, ""))
+
+		currentSeq := buttonSequenceForInputAndPad(code.Buttons, numberPad)
+		aoc.Debug(aoc.JoinRunes(currentSeq, ""))
+
+		finalSeqLen := getNumberOfButtonPressesForNthRobot(string(currentSeq), 0, arrowPad)
+
+		aoc.Debugf("%d * %d = %d", finalSeqLen, code.Numeric, code.Numeric*finalSeqLen)
+		answer += code.Numeric * finalSeqLen
+	}
+
+	aoc.Println(t, answer)
 }
 
 type Code struct {
 	Numeric int
 	Buttons []rune
+}
+
+const robots = 25 // manually update to 2 to test if implementation behaves the same as part 1
+
+var cache = map[string][]int{}
+
+func initCacheForInput(input string) {
+	if _, ok := cache[input]; ok {
+		return
+	}
+	cache[input] = make([]int, robots)
+}
+
+func getNumberOfButtonPressesForNthRobot(input string, robotIndex int, pad *aoc.Grid) int {
+	result, ok := cache[input]
+	if ok && result[robotIndex] != 0 {
+		return result[robotIndex]
+	} else if !ok {
+		initCacheForInput(input)
+	}
+
+	nextSeq := buttonSequenceForInputAndPad([]rune(input), pad)
+	cache[input][0] = len(nextSeq)
+
+	if robotIndex == robots-1 {
+		return len(nextSeq)
+	}
+
+	totalNumberOfPresses := 0
+	steps := seqToSteps(string(nextSeq))
+	for _, step := range steps {
+		numberOfPresses := getNumberOfButtonPressesForNthRobot(step, robotIndex+1, pad)
+		initCacheForInput(step)
+		cache[step][0] = numberOfPresses
+		totalNumberOfPresses += numberOfPresses
+	}
+
+	cache[input][robotIndex] = totalNumberOfPresses
+	return totalNumberOfPresses
+}
+
+func seqToSteps(input string) []string {
+	output := []string{}
+	current := []rune{}
+	for _, char := range input {
+		current = append(current, char)
+
+		if char == 'A' {
+			output = append(output, string(current))
+			current = []rune{}
+		}
+	}
+	return output
 }
