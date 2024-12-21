@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -101,4 +102,11 @@ func CopyMap[K comparable, V any](m map[K]V) map[K]V {
 		result[k] = v
 	}
 	return result
+}
+
+func JoinRunes(rs []rune, sep string) string {
+	return strings.Join(
+		Map(rs, func(r rune) string { return string(r) }),
+		sep,
+	)
 }

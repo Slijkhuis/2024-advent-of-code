@@ -10,6 +10,8 @@ type Graph[K, T comparable] struct {
 	Edges map[Edge[K, T]]struct{}
 }
 
+type StandardGraph Graph[Point, rune]
+
 type Node[K, T comparable] struct {
 	Key   K
 	Value T
@@ -34,6 +36,13 @@ func NewGraph[K, T comparable]() *Graph[K, T] {
 	return &Graph[K, T]{
 		Nodes: map[K]*Node[K, T]{},
 		Edges: map[Edge[K, T]]struct{}{},
+	}
+}
+
+func NewStandardGraph() *Graph[Point, rune] {
+	return &Graph[Point, rune]{
+		Nodes: map[Point]*Node[Point, rune]{},
+		Edges: map[Edge[Point, rune]]struct{}{},
 	}
 }
 
@@ -250,4 +259,13 @@ func (g *Graph[K, T]) FindAllShortestPaths(from, to *Node[K, T]) ([][]*Node[K, T
 	backtrack(to, []*Node[K, T]{to})
 
 	return paths, dist[to.Key]
+}
+
+func (g *Graph[K, T]) MustFindFirstNodeWithValue(value T) *Node[K, T] {
+	for _, node := range g.Nodes {
+		if node.Value == value {
+			return node
+		}
+	}
+	panic("Node not found")
 }

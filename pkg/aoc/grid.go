@@ -51,6 +51,29 @@ func (d Direction) Opposite() Direction {
 	return Direction{-d.X, -d.Y}
 }
 
+func (d Direction) Rune() rune {
+	switch d {
+	case Up:
+		return '^'
+	case Left:
+		return '<'
+	case Right:
+		return '>'
+	case Down:
+		return 'v'
+	case UpLeft, DownRight:
+		return '\\'
+	case UpRight, DownLeft:
+		return '/'
+	default:
+		return '?'
+	}
+}
+
+func (d Direction) String() string {
+	return string(d.Rune())
+}
+
 type PointWithDirection struct {
 	Point
 	Direction
@@ -139,6 +162,15 @@ func (g *Grid) FindFirstCellWithValue(value rune) (Cell, bool) {
 		}
 	}
 	return Cell{}, false
+}
+
+func (g *Grid) MustFindFirstPointWithValue(value rune) Point {
+	for cell := range g.Iter() {
+		if cell.Value == value {
+			return cell.Point
+		}
+	}
+	panic("not found in grid: " + string(value))
 }
 
 func (g *Grid) AdjOrNull(p Point, direction Direction) rune {
