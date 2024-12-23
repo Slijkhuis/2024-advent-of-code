@@ -63,3 +63,58 @@ func Reverse[T any](collection []T) []T {
 	}
 	return collection
 }
+
+func Intersection[T comparable](a, b []T) []T {
+	seen := make(map[T]bool)
+	for i := range a {
+		seen[a[i]] = true
+	}
+
+	var result []T
+	for i := range b {
+		if seen[b[i]] {
+			result = append(result, b[i])
+		}
+	}
+	return result
+}
+
+func CopySlice[T comparable](collection []T) []T {
+	result := make([]T, len(collection))
+	copy(result, collection)
+	return result
+}
+
+func RemoveItem[T comparable](slice []T, item T) []T {
+	for i, v := range slice {
+		if v == item {
+			return append(slice[:i], slice[i+1:]...)
+		}
+	}
+	return slice
+}
+
+func Keys[K comparable, V any](m map[K]V) []K {
+	keys := make([]K, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
+func Values[K comparable, V any](m map[K]V) []V {
+	values := make([]V, 0, len(m))
+	for _, v := range m {
+		values = append(values, v)
+	}
+	return values
+}
+
+func SliceToMap[K comparable, V any](slice []V, f func(V) (K, V)) map[K]V {
+	m := make(map[K]V)
+	for i := range slice {
+		k, v := f(slice[i])
+		m[k] = v
+	}
+	return m
+}

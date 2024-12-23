@@ -269,3 +269,54 @@ func (g *Graph[K, T]) MustFindFirstNodeWithValue(value T) *Node[K, T] {
 	}
 	panic("Node not found")
 }
+
+// https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
+func (g *Graph[K, T]) BronKerbosch() [][]*Node[K, T] {
+	R := make(map[K]*Node[K, T])
+	X := make(map[K]*Node[K, T])
+	P := CopyMap(g.Nodes)
+
+	var cliques [][]*Node[K, T]
+	g.bronKerbosch(R, P, X, &cliques)
+	return cliques
+}
+
+func (g *Graph[K, T]) bronKerbosch(R, P, X map[K]*Node[K, T], cliques *[][]*Node[K, T]) {
+	if len(P) == 0 && len(X) == 0 {
+		*cliques = append(*cliques, Map(Keys(R), func(key K) *Node[K, T] { return R[key] }))
+		return
+	}
+
+	localP := CopyMap(P)
+
+	for _, node := range localP {
+		newR := CopyMap(R)
+		newR[node.Key] = node
+
+		neighbors := g.Neighbors(node)
+
+		newP := SliceToMap(Intersection(Values(P), neighbors), func(node *Node[K, T]) (K, *Node[K, T]) {
+			return node.Key, node
+		})
+		newX := SliceToMap(Intersection(Values(X), neighbors), func(node *Node[K, T]) (K, *Node[K, T]) {
+			return node.Key, node
+		})
+
+		g.bronKerbosch(newR, newP, newX, cliques)
+
+		delete(P, node.Key)
+		X[node.Key] = node
+	}
+}
+
+func (g *Graph[K, T]) Neighbors(node *Node[K, T]) []*Node[K, T] {
+	var neighbors []*Node[K, T]
+	for edge := range g.Edges {
+		if edge.From.Key == node.Key {
+			if neighbor, exists := g.Nodes[edge.To.Key]; exists {
+				neighbors = append(neighbors, neighbor)
+			}
+		}
+	}
+	return neighbors
+}
