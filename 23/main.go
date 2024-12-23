@@ -66,7 +66,35 @@ func part1() {
 }
 
 func part2() {
+	t := time.Now()
+	g := aoc.NewGraph[string, struct{}]()
+
 	for line := range aoc.LinesFromFile(os.Args[2]) {
-		fmt.Println(line)
+		computers := strings.Split(line, "-")
+		n1 := g.NewOrExistingNode(computers[0], struct{}{})
+		n2 := g.NewOrExistingNode(computers[1], struct{}{})
+		g.AddEdge(n1, n2)
+		g.AddEdge(n2, n1)
 	}
+
+	aoc.Println(t, "built graph")
+
+	cliques := g.BronKerbosch()
+	aoc.Println(t, "found cliques")
+
+	var largestClique []*aoc.Node[string, struct{}]
+	for _, clique := range cliques {
+		if len(clique) > len(largestClique) {
+			largestClique = clique
+		}
+	}
+
+	var keys []string
+	for _, node := range largestClique {
+		keys = append(keys, node.Key)
+	}
+	sort.Strings(keys)
+
+	aoc.Println(t, len(largestClique))
+	aoc.Println(t, strings.Join(keys, ","))
 }
